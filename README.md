@@ -34,73 +34,60 @@ Diagram
 
 
 Verilog Code for Seven-Segment Display
-
-// seven_segment_display.v
-module seven_segment_display (
-    input wire [3:0] binary_input,
-    output reg [6:0] seg_output
-);
-    always @(*) begin
-        case (binary_input)
-            4'b0000: seg_output = 7'b0111111; // 0
-            4'b0001: seg_output = 7'b0000110; // 1
-            4'b0010: seg_output = 7'b1011011; // 2
-            4'b0013: seg_output = 7'b1001111; // 3
-            4'b0100: seg_output = 7'b1100110; // 4
-            4'b0101: seg_output = 7'b1101101; // 5
-            4'b0110: seg_output = 7'b1111101; // 6
-            4'b0111: seg_output = 7'b0000111; // 7
-            4'b1000: seg_output = 7'b1111111; // 8
-            4'b1001: seg_output = 7'b1101111; // 9
-            default: seg_output = 7'b0000000; // blank or error
-        endcase
-    end
+```
+module bcd(bcd,s);
+input [3:0]bcd;
+output reg [6:0]s;
+always@(*)
+case(bcd)
+  0:s=7'b0000001;
+  1:s=7'b1001111;
+  2:s=7'b0010010;
+  3:s=7'b0000110;
+  4:s=7'b1001100;
+  5:s=7'b0100100;
+  6:s=7'b0100000;
+  7:s=7'b0001111;
+  8:s=7'b0000000;
+  9:s=7'b0000100;
+  default:s=7'b1111111;
+  endcase
 endmodule
-
+```
 ![Screenshot 2024-11-21 184919](https://github.com/user-attachments/assets/e954059c-50b3-4fea-aa44-50a6c7a5d5ad)
 
 Testbench for Seven-Segment Display:
+```
+module bcd_tb; // Inputs 
+reg [3:0] bcd;
 
-// seven_segment_display_tb.v
-`timescale 1ns / 1ps
+// Outputs
+wire [6:0] s;
 
-module seven_segment_display_tb;
-    // Inputs
-    reg [3:0] binary_input;
+// Instantiate the Unit Under Test (UUT)
+bcd uut (
+    .bcd(bcd),
+    .s(s)
+);
 
-    // Outputs
-    wire [6:0] seg_output;
-
-    // Instantiate the Unit Under Test (UUT)
-    seven_segment_display uut (
-        .binary_input(binary_input),
-        .seg_output(seg_output)
-    );
-
-    // Test procedure
-    initial begin
-        // Initialize inputs
-        binary_input = 4'b0000;
-
-        // Apply test cases
-        #10 binary_input = 4'b0000; // Display 0
-        #10 binary_input = 4'b0001; // Display 1
-        #10 binary_input = 4'b0010; // Display 2
-        #10 binary_input = 4'b0011; // Display 3
-        #10 binary_input = 4'b0100; // Display 4
-        #10 binary_input = 4'b0101; // Display 5
-        #10 binary_input = 4'b0110; // Display 6
-        #10 binary_input = 4'b0111; // Display 7
-        #10 binary_input = 4'b1000; // Display 8
-        #10 binary_input = 4'b1001; // Display 9
-        #10 $stop;
-    end
-
-    // Monitor outputs
-    initial begin
-        $monitor("Time=%0t | binary_input=%b | seg_output=%b", $time, binary_input, seg_output);
-    end
+// Test procedure
+initial begin
+    // Initialize inputs
+    bcd = 4'b0000;
+    #10 bcd = 4'b0000; // Display 0
+    #10 bcd = 4'b0001; // Display 1
+    #10 bcd = 4'b0010; // Display 2
+    #10 bcd = 4'b0011; // Display 3
+    #10 bcd= 4'b0100; // Display 4
+    #10 bcd = 4'b0101; // Display 5
+    #10 bcd = 4'b0110; // Display 6
+    #10 bcd = 4'b0111; // Display 7
+    #10 bcd = 4'b1000; // Display 8
+    #10 bcd = 4'b1001; // Display 9
+    #10 $stop;
+end
 endmodule
+```
 ![Screenshot 2024-11-21 185000](https://github.com/user-attachments/assets/49b86c1e-9841-46c7-9acb-4feb8133cf7e)
 
 Conclusion
